@@ -2,12 +2,15 @@
 <html>
     <head>
         <title>Happy, Sad, Angry</title>
+        <link rel="stylesheet" href="/static/main.css"> 
     </head>
     <body>
         <h1>Give me your best {{ page_data.emotion }} face</h1>
         <video id="video" autoplay></video>
         <br/>
-        <button id="capture">Capture emotion</button>
+        <div>
+            <button id="capture">Capture emotion</button>
+        </div>
         <h1 id="message"></h1>
 
         <script type="text/javascript">

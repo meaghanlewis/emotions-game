@@ -4,8 +4,25 @@ from flask import Flask, render_template, request, jsonify
 app = Flask(__name__)
 
 #TODO: Enter code to create face client
+from azure.cognitiveservices.vision.face import FaceClient
+from msrest.authentication import CognitiveServicesCredentials
+
+credentials = CognitiveServicesCredentials(os.environ["COGSVCS_KEY"])
+face_client = FaceClient(os.environ["COGSVCS_CLIENTURL"], credentials=credentials)
 
 emotions = ['neutral', 'fear','happiness','sadness']
+
+def best_emotion(emotion):
+    emotions = {}
+    emotions['anger'] = emotion.anger
+    emotions['contempt'] = emotion.contempt
+    emotions['disgust'] = emotion.disgust
+    emotions['fear'] = emotion.fear
+    emotions['happiness'] = emotion.happiness
+    emotions['neutral'] = emotion.neutral
+    emotions['sadness'] = emotion.sadness
+    emotions['surprise'] = emotion.surprise
+    return max(zip(emotions.values(), emotions.keys()))[1]
 
 @app.route('/')
 def home():
@@ -23,6 +40,7 @@ def check_results():
     image = io.BytesIO(image_bytes)
 
     #TODO: Enter code to detect emotion
+    faces = face_client.face.detect_with_stream(image, return_face_attributes=['emotion'])
 
     if len(faces) == 1:
         detected_emotion = best_emotion(faces[0].face_attributes.emotion)
@@ -42,15 +60,3 @@ def check_results():
         return jsonify({
             'message': '☠️ ERROR: No faces detected'
         })
-
-def best_emotion(emotion):
-    emotions = {}
-    emotions['anger'] = emotion.anger
-    emotions['contempt'] = emotion.contempt
-    emotions['disgust'] = emotion.disgust
-    emotions['fear'] = emotion.fear
-    emotions['happiness'] = emotion.happiness
-    emotions['neutral'] = emotion.neutral
-    emotions['sadness'] = emotion.sadness
-    emotions['surprise'] = emotion.surprise
-    return max(zip(emotions.values(), emotions.keys()))[1]
