@@ -7,8 +7,8 @@ app = Flask(__name__)
 from azure.cognitiveservices.vision.face import FaceClient
 from msrest.authentication import CognitiveServicesCredentials
 
-credentials = CognitiveServicesCredentials(os.environ["COGSVCS_KEY"])
-face_client = FaceClient(os.environ["COGSVCS_CLIENTURL"], credentials=credentials)
+credentials = CognitiveServicesCredentials(os.environ["FACE_KEY"])
+face_client = FaceClient(os.environ["FACE_ENDPOINT"], credentials=credentials)
 
 emotions = ['neutral', 'fear','happiness','sadness']
 
